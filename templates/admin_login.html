@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 로그인</title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: radial-gradient(circle at center, #808080 0%, #707070 20%, #606060 40%, #505050 60%, #404040 80%, #303030 100%);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-container {
+            background: radial-gradient(circle at center, #e0e0e0 0%, #d0d0d0 20%, #c0c0c0 40%, #b0b0b0 60%, #a0a0a0 80%, #909090 100%);
+            padding: 40px;
+            border-radius: 0px;
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.6),
+                inset 0 1px 0 rgba(255,255,255,0.9),
+                inset 0 -1px 0 rgba(0,0,0,0.2),
+                0 0 30px rgba(255,255,255,0.3);
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #808080;
+            position: relative;
+        }
+        
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.8) 50%, transparent 100%);
+            z-index: 1;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #c0c0c0;
+            border-radius: 0px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #808080;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: radial-gradient(circle at center, #b0b0b0 0%, #a0a0a0 40%, #909090 70%, #808080 100%);
+            color: white;
+            border: none;
+            border-radius: 0px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 
+                0 3px 6px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.6),
+                inset 0 -1px 0 rgba(0,0,0,0.3);
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: radial-gradient(circle at center, #fdf2f2 0%, #f8d7da 100%);
+            border-radius: 0px;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 20px;
+            padding: 10px;
+            background: radial-gradient(circle at center, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 0px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: radial-gradient(circle at center, #e0e0e0 0%, #d0d0d0 20%, #c0c0c0 40%, #b0b0b0 60%, #a0a0a0 80%, #909090 100%);
+            color: #333;
+            border: none;
+            border-radius: 0px;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 3px 6px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.6),
+                inset 0 -1px 0 rgba(0,0,0,0.3);
+        }
+        
+        .back-button:hover {
+            transform: translateY(-2px);
+            background: radial-gradient(circle at center, #f0f0f0 0%, #e0e0e0 20%, #d0d0d0 40%, #c0c0c0 60%, #b0b0b0 80%, #a0a0a0 100%);
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-button">🤖 챗봇으로 돌아가기</a>
+    <div class="login-container">
+        <h1>🔐 관리자 로그인</h1>
+        
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+        
+        <form method="POST">
+            <div class="form-group">
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">로그인</button>
+        </form>
+        
+        <div class="info">
+            관리자만 접근 가능합니다
+        </div>
+    </div>
+</body>
+</html> 

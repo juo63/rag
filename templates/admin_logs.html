@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 - 대화 로그</title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: radial-gradient(circle at center, #808080 0%, #707070 20%, #606060 40%, #505050 60%, #404040 80%, #303030 100%);
+            min-height: 100vh;
+        }
+        .header {
+            background: radial-gradient(circle at center, #e0e0e0 0%, #d0d0d0 20%, #c0c0c0 40%, #b0b0b0 60%, #a0a0a0 80%, #909090 100%);
+            padding: 20px;
+            border-radius: 0px;
+            box-shadow: 
+                0 10px 30px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.9),
+                inset 0 -1px 0 rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #808080;
+        }
+        .header h1 {
+            margin: 0;
+            color: #333;
+        }
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background: radial-gradient(circle at center, #b0b0b0 0%, #a0a0a0 40%, #909090 70%, #808080 100%);
+            color: white;
+            box-shadow: 
+                0 3px 6px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.6),
+                inset 0 -1px 0 rgba(0,0,0,0.3);
+        }
+        
+        .btn-blocked {
+            background: radial-gradient(circle at center, #dc3545 0%, #c82333 40%, #bd2130 70%, #a71e2a 100%);
+            color: white;
+            box-shadow: 
+                0 3px 6px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.6),
+                inset 0 -1px 0 rgba(0,0,0,0.3);
+        }
+        .btn-secondary {
+            background: radial-gradient(circle at center, #6c757d 0%, #5a6268 40%, #495057 70%, #343a40 100%);
+            color: white;
+            box-shadow: 
+                0 3px 6px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.3),
+                inset 0 -1px 0 rgba(0,0,0,0.3);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: radial-gradient(circle at center, #e0e0e0 0%, #d0d0d0 20%, #c0c0c0 40%, #b0b0b0 60%, #a0a0a0 80%, #909090 100%);
+            padding: 20px;
+            border-radius: 0px;
+            box-shadow: 
+                0 5px 15px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.9),
+                inset 0 -1px 0 rgba(0,0,0,0.2);
+            text-align: center;
+            border: 1px solid #808080;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        .controls {
+            background: radial-gradient(circle at center, #e0e0e0 0%, #d0d0d0 20%, #c0c0c0 40%, #b0b0b0 60%, #a0a0a0 80%, #909090 100%);
+            padding: 20px;
+            border-radius: 0px;
+            box-shadow: 
+                0 5px 15px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.9),
+                inset 0 -1px 0 rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid #808080;
+        }
+        .log-item {
+            background: radial-gradient(circle at center, #e0e0e0 0%, #d0d0d0 20%, #c0c0c0 40%, #b0b0b0 60%, #a0a0a0 80%, #909090 100%);
+            margin-bottom: 15px;
+            border-radius: 0px;
+            box-shadow: 
+                0 5px 15px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.9),
+                inset 0 -1px 0 rgba(0,0,0,0.2);
+            overflow: hidden;
+            border: 1px solid #808080;
+        }
+        .log-header {
+            background: radial-gradient(circle at center, #f8f9fa 0%, #e9ecef 20%, #dee2e6 40%, #ced4da 60%, #adb5bd 80%, #6c757d 100%);
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
+        }
+        .log-time {
+            color: #666;
+            font-size: 14px;
+        }
+        .log-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-fallback {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .log-content {
+            padding: 20px;
+        }
+        .log-question {
+            background: radial-gradient(circle at center, #f8f9fa 0%, #e9ecef 20%, #dee2e6 40%, #ced4da 60%, #adb5bd 80%, #6c757d 100%);
+            padding: 15px;
+            border-radius: 0px;
+            margin-bottom: 15px;
+            border: 1px solid #dee2e6;
+        }
+        .log-answer {
+            background: radial-gradient(circle at center, #f8f9fa 0%, #e9ecef 20%, #dee2e6 40%, #ced4da 60%, #adb5bd 80%, #6c757d 100%);
+            padding: 15px;
+            border-radius: 0px;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            border: 1px solid #dee2e6;
+        }
+        .loading {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+        }
+        .no-logs {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+            font-size: 18px;
+        }
+        .auto-refresh {
+            margin-left: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 관리자 - 대화 로그</h1>
+        <div class="header-buttons">
+            <a href="/" class="btn btn-primary">🤖 챗봇</a>
+            <button class="btn btn-primary" onclick="refreshData()">새로고침</button>
+            <a href="/admin/logout" class="btn btn-secondary">로그아웃</a>
+        </div>
+    </div>
+    
+    <div class="stats" id="stats">
+        <div class="loading">통계 로딩 중...</div>
+    </div>
+    
+    <div class="controls">
+        <div style="margin-bottom: 15px;">
+            <strong>카테고리별 필터:</strong>
+            <button class="btn btn-primary" onclick="loadLogsByCategory('all')" id="btn-all">전체</button>
+            <button class="btn btn-primary" onclick="loadLogsByCategory('신청방법')" id="btn-신청방법">신청방법</button>
+            <button class="btn btn-primary" onclick="loadLogsByCategory('품목')" id="btn-품목">품목</button>
+            <button class="btn btn-primary" onclick="loadLogsByCategory('등급신청조건')" id="btn-등급신청조건">등급신청조건</button>
+            <button class="btn btn-primary" onclick="loadLogsByCategory('본인부담률')" id="btn-본인부담률">본인부담률</button>
+            <button class="btn btn-primary" onclick="loadLogsByCategory('자격확인')" id="btn-자격확인">자격확인</button>
+            <button class="btn btn-blocked" onclick="loadLogsByCategory('차단된질문')" id="btn-차단된질문">차단된질문</button>
+            <button class="btn btn-primary" onclick="loadLogsByCategory('기타')" id="btn-기타">기타</button>
+        </div>
+        <div>
+            <strong>개수별 필터:</strong>
+            <button class="btn btn-primary" onclick="loadLogs(20)">최근 20개</button>
+            <button class="btn btn-primary" onclick="loadLogs(50)">최근 50개</button>
+            <button class="btn btn-primary" onclick="loadLogs(100)">최근 100개</button>
+            <button class="btn btn-primary" onclick="loadLogs()">전체</button>
+            <span class="auto-refresh">자동 새로고침: 30초</span>
+        </div>
+    </div>
+    
+    <div id="logs">
+        <div class="loading">로딩 중...</div>
+    </div>
+
+    <script>
+        let autoRefreshInterval;
+        
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleString('ko-KR');
+        }
+        
+        function getStatusText(status) {
+            return status === 'success' ? '성공' : '차단/오류';
+        }
+        
+        function getStatusClass(status) {
+            return status === 'success' ? 'status-success' : 'status-fallback';
+        }
+        
+        async function loadStats() {
+            try {
+                const response = await fetch('/admin/api/logs');
+                const data = await response.json();
+                
+                const totalQuestions = data.logs.length;
+                const successCount = data.logs.filter(log => log.status === 'success').length;
+                const fallbackCount = totalQuestions - successCount;
+                const successRate = totalQuestions > 0 ? Math.round((successCount / totalQuestions) * 100) : 0;
+                
+                // 카테고리별 통계 계산 (버튼 업데이트용)
+                const categoryStats = {};
+                data.logs.forEach(log => {
+                    const category = log.category || '기타';
+                    if (!categoryStats[category]) {
+                        categoryStats[category] = 0;
+                    }
+                    categoryStats[category]++;
+                });
+                
+                document.getElementById('stats').innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-number">${totalQuestions}</div>
+                        <div class="stat-label">전체 질문</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${successCount}</div>
+                        <div class="stat-label">성공</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${fallbackCount}</div>
+                        <div class="stat-label">차단/오류</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${successRate}%</div>
+                        <div class="stat-label">성공률</div>
+                    </div>
+                `;
+                
+                // 카테고리 버튼에 개수 표시 업데이트
+                updateCategoryButtonCounts(categoryStats);
+            } catch (error) {
+                console.error('통계 로드 실패:', error);
+            }
+        }
+        
+        function updateCategoryButtonCounts(categoryStats) {
+            // 전체 버튼 업데이트
+            const totalCount = Object.values(categoryStats).reduce((sum, count) => sum + count, 0);
+            const allButton = document.getElementById('btn-all');
+            if (allButton) {
+                allButton.textContent = `전체 (${totalCount})`;
+            }
+            
+            // 각 카테고리 버튼 업데이트
+            const categories = ['신청방법', '품목', '등급신청조건', '본인부담률', '자격확인', '차단된질문', '기타'];
+            categories.forEach(category => {
+                const button = document.getElementById(`btn-${category}`);
+                if (button) {
+                    const count = categoryStats[category] || 0;
+                    button.textContent = `${category} (${count})`;
+                }
+            });
+        }
+        
+        async function loadLogs(limit = null) {
+            try {
+                const url = limit ? `/admin/api/logs?limit=${limit}` : '/admin/api/logs';
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.logs && data.logs.length > 0) {
+                    const logsHtml = data.logs.map(log => `
+                        <div class="log-item">
+                            <div class="log-header">
+                                <span class="log-time">${formatTime(log.timestamp)}</span>
+                                <span class="log-status ${getStatusClass(log.status)}">${getStatusText(log.status)}</span>
+                                <span class="log-category" style="background: #e9ecef; padding: 2px 6px; border-radius: 3px; font-size: 12px;">${log.category || '기타'}</span>
+                            </div>
+                            <div class="log-content">
+                                <div class="log-question">
+                                    <strong>질문:</strong> ${log.question}
+                                </div>
+                                <div class="log-answer">
+                                    <strong>답변:</strong> ${log.answer}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    document.getElementById('logs').innerHTML = logsHtml;
+                } else {
+                    document.getElementById('logs').innerHTML = '<div class="no-logs">아직 대화 기록이 없습니다.</div>';
+                }
+            } catch (error) {
+                console.error('로그 로드 실패:', error);
+                document.getElementById('logs').innerHTML = '<div class="loading">로드 실패</div>';
+            }
+        }
+        
+        async function loadLogsByCategory(category) {
+            try {
+                console.log(`카테고리 '${category}' 로딩 중...`);
+                const url = `/admin/api/logs?category=${category}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                console.log(`카테고리 '${category}' 결과:`, data.logs.length, '개 로그');
+                
+                if (data.logs && data.logs.length > 0) {
+                    const logsHtml = data.logs.map(log => `
+                        <div class="log-item">
+                            <div class="log-header">
+                                <span class="log-time">${formatTime(log.timestamp)}</span>
+                                <span class="log-status ${getStatusClass(log.status)}">${getStatusText(log.status)}</span>
+                                <span class="log-category" style="background: #e9ecef; padding: 2px 6px; border-radius: 3px; font-size: 12px;">${log.category || '기타'}</span>
+                            </div>
+                            <div class="log-content">
+                                <div class="log-question">
+                                    <strong>질문:</strong> ${log.question}
+                                </div>
+                                <div class="log-answer">
+                                    <strong>답변:</strong> ${log.answer}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    document.getElementById('logs').innerHTML = logsHtml;
+                } else {
+                    document.getElementById('logs').innerHTML = `<div class="no-logs">'${category}' 카테고리의 대화 기록이 없습니다. (총 ${data.logs ? data.logs.length : 0}개)</div>`;
+                }
+                
+                // 선택된 카테고리 버튼 하이라이트
+                highlightSelectedCategory(category);
+            } catch (error) {
+                console.error('카테고리별 로그 로드 실패:', error);
+                document.getElementById('logs').innerHTML = '<div class="loading">로드 실패</div>';
+            }
+        }
+        
+        function highlightSelectedCategory(selectedCategory) {
+            // 모든 카테고리 버튼의 스타일 초기화
+            const categories = ['all', '신청방법', '품목', '등급신청조건', '본인부담률', '자격확인', '차단된질문', '기타'];
+            categories.forEach(category => {
+                const button = document.getElementById(`btn-${category}`);
+                if (button) {
+                    if (category === '차단된질문') {
+                        button.style.background = 'radial-gradient(circle at center, #dc3545 0%, #c82333 40%, #bd2130 70%, #a71e2a 100%)';
+                    } else {
+                        button.style.background = 'radial-gradient(circle at center, #b0b0b0 0%, #a0a0a0 40%, #909090 70%, #808080 100%)';
+                    }
+                    button.style.transform = 'none';
+                }
+            });
+            
+            // 선택된 버튼 하이라이트
+            const selectedButton = document.getElementById(`btn-${selectedCategory}`);
+            if (selectedButton) {
+                if (selectedCategory === '차단된질문') {
+                    selectedButton.style.background = 'radial-gradient(circle at center, #e74c3c 0%, #dc3545 40%, #c82333 70%, #bd2130 100%)';
+                } else {
+                    selectedButton.style.background = 'radial-gradient(circle at center, #667eea 0%, #5a67d8 40%, #4c51bf 70%, #434190 100%)';
+                }
+                selectedButton.style.transform = 'translateY(-2px)';
+            }
+        }
+        
+        function refreshData() {
+            loadStats();
+            loadLogs();
+        }
+        
+        function startAutoRefresh() {
+            // 30초마다 자동 새로고침
+            autoRefreshInterval = setInterval(() => {
+                refreshData();
+            }, 30000);
+        }
+        
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+        }
+        
+        // 페이지 로드 시 데이터 로드 및 자동 새로고침 시작
+        window.onload = function() {
+            refreshData();
+            startAutoRefresh();
+        };
+        
+        // 페이지 떠날 때 자동 새로고침 중지
+        window.onbeforeunload = function() {
+            stopAutoRefresh();
+        };
+    </script>
+</body>
+</html> 
