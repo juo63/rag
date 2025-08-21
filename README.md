@@ -101,12 +101,9 @@ as_retriever(search_kwargs={"k": 6, "score_threshold": 0.5})
 
 
 ✅ 업로드한 파일들
-qa/app.py - 메인 Flask 챗봇 애플리케이션
-qa/rag.py - RAG 시스템 관련 코드
-qa/templates/chat.html - 채팅 인터페이스
-qa/templates/admin_login.html - 관리자 로그인
-qa/templates/admin_logs.html - 관리자 로그 페이지
-requirements.txt - Python 의존성
-env_example.txt - 환경변수 설정 예시
-qa/README.md - 프로젝트 설명서 (마크다운 포맷 완성!)
-.gitignore - 불필요한 파일 제외 설정
+-qa/app.py - 메인 Flask 챗봇 애플리케이션
+-qa/rag.py - RAG 시스템 관련 코드
+-qa/templates/chat.html - 채팅 인터페이스
+-qa/templates/admin_login.html - 관리자 로그인
+-qa/templates/admin_logs.html - 관리자 로그 페이지
+-qa/README.md - 프로젝트 설명서 
